@@ -1,0 +1,45 @@
+version: "3"
+services:
+    nginx:
+        build:
+            context: .
+            dockerfile: docker/nginx/Dockerfile
+        ports:
+            - "8080:80"
+        networks:
+            - internal
+        volumes:
+            - ./:/var/www/html/
+            - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+            - ./docker/nginx/fastcgi-php.conf:/etc/nginx/fastcgi-php.conf
+        container_name: nginx
+    php-fpm:
+        build:
+            context: .
+            dockerfile: docker/php-fpm/Dockerfile
+        networks:
+            - internal
+        volumes:
+            - ./:/var/www/html/
+        container_name: php
+        expose:
+            - "9000"
+    mysql:
+        container_name: mysql
+        restart: always
+        image: mysql:latest
+        platform: linux/x86_64
+        ports:
+            - "8101:${DB_PORT}"
+        environment:
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+            MYSQL_ALLOW_EMPTY_PASSWORD: 1
+            MYSQL_PASS=: ${DB_PASSWORD}
+        volumes:
+            - ./database/db:/var/lib/mysql
+        networks:
+            - internal
+networks:
+    internal:
+        driver: bridge
+
