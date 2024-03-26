@@ -5,9 +5,9 @@ namespace App\Services;
 use App\DTO\AuthUserDTO;
 use App\DTO\UserDTO;
 use App\Repositories\UserRepository;
-use http\Exception\InvalidArgumentException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Hash;
+use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class UserService
@@ -32,7 +32,7 @@ class UserService
         ]);
 
         $user->save();
-        return $user->createToken('authToken', ['*'], now()->addHour())->plainTextToken;
+        return $user->createToken('authToken', ['*'], now()->addDay())->plainTextToken;
     }
 
     /**
@@ -42,15 +42,15 @@ class UserService
     public function getToken(AuthUserDTO $dto): string
     {
         $user = $this->repository->getWithWhereSingle([], [
-            'email'=> $dto->email
+            'email' => $dto->email
         ]);
 
         if (!$user) {
-            throw new ModelNotFoundException('model not found', ResponseAlias::HTTP_NOT_FOUND);
+            throw new ModelNotFoundException('user not found', ResponseAlias::HTTP_NOT_FOUND);
         }
 
         if (!Hash::check($dto->password, $user->password)) {
-            throw new InvalidArgumentException('incorrect login or password', ResponseAlias::HTTP_UNPROCESSABLE_ENTITY);
+            throw new InvalidArgumentException('these credentials do not match our records', ResponseAlias::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         return $user->createToken('authToken', ['*'], now()->addDay())->plainTextToken;

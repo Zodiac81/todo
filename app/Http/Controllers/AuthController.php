@@ -8,6 +8,7 @@ use App\Http\Requests\Auth\SignupRequest;
 use App\Http\Requests\Auth\TokenRequest;
 use App\Services\UserService;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
@@ -19,9 +20,9 @@ class AuthController extends BaseController
 
     /**
      * @param SignupRequest $request
-     * @return array
+     * @return JsonResponse
      */
-    public function signUp(SignupRequest $request): array
+    public function signUp(SignupRequest $request): JsonResponse
     {
         try {
             $token = $this->userService->store(new UserDTO($request->validated()));
@@ -34,9 +35,9 @@ class AuthController extends BaseController
 
     /**
      * @param TokenRequest $request
-     * @return array
+     * @return JsonResponse
      */
-    public function getToken(TokenRequest $request): array
+    public function getToken(TokenRequest $request): JsonResponse
     {
         try {
             $token = $this->userService->getToken(new AuthUserDTO($request->validated()));
@@ -47,9 +48,9 @@ class AuthController extends BaseController
     }
 
     /**
-     * @return array
+     * @return JsonResponse
      */
-    public function logout(): array
+    public function logout(): JsonResponse
     {
         return $this->respond(Auth::user()->currentAccessToken()->delete(), ResponseAlias::HTTP_OK);
     }
