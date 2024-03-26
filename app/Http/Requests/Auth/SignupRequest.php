@@ -26,9 +26,9 @@ class SignupRequest extends AuthBaseRequest
             'name.required'     => 'The name field is required',
             'name.max'          => 'The name field must not be more than 255 characters',
             'name.string'       => 'The name field must be a string',
-            'email.required'    => 'The email field is required.',
-            'email.email'      => 'The email field must be an email',
-            'email.unique'      => 'The email field must be a unique',
+            'email.required'    => 'The email field is required',
+            'email.email'       => 'The email field must be an email',
+            'email.unique'      => 'The email has already been taken',
         ]);
     }
 }

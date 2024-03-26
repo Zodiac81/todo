@@ -21,6 +21,69 @@ class AuthController extends BaseController
     /**
      * @param SignupRequest $request
      * @return JsonResponse
+     *
+     * @OA\Post (
+     *      path="/auth/sign-up",
+     *      tags={"Auth"},
+     *      @OA\RequestBody(
+     *          @OA\MediaType(
+     *              mediaType="application/json",
+     *              @OA\Schema(
+     *                  @OA\Property(
+     *                       type="object",
+     *                       @OA\Property(
+     *                           property="name",
+     *                           type="string"
+     *                       ),
+     *                       @OA\Property(
+     *                           property="email",
+     *                           type="string"
+     *                       ),
+     *                       @OA\Property(
+     *                           property="password",
+     *                           type="string"
+     *                       )
+     *                  ),
+     *                  example={
+     *                      "name":"John",
+     *                      "email":"john@test.com",
+     *                      "password":"johnjohn1"
+     *                 }
+     *              )
+     *          )
+     *       ),
+     *       @OA\Response(
+     *           response=201,
+     *           description="Created",
+     *           @OA\JsonContent(
+     *               @OA\Property(property="code", type="string", example="201"),
+     *               @OA\Property(property="payload", type="object",
+     *                   @OA\Property(property="access_token", type="object",
+     *                       @OA\Property(property="token", type="string", example="1|randomtokenasfhajskfhajf398rureuuhfdshk"),
+     *                   ),
+     *               ),
+     *           )
+     *       ),
+     *       @OA\Response(
+     *           response=422,
+     *           description="Validation error",
+     *           @OA\JsonContent(
+     *               @OA\Property(property="meta", type="object",
+     *                   @OA\Property(property="code", type="number", example=422),
+     *                   @OA\Property(property="status", type="string", example="error"),
+     *                   @OA\Property(property="message", type="object",
+     *                       @OA\Property(property="email", type="array", collectionFormat="multi",
+     *                         @OA\Items(
+     *                           type="string",
+     *                           example="The email has already been taken.",
+     *                           )
+     *                       ),
+     *                   ),
+     *               ),
+     *           )
+     *       )
+     *  )
+     * /
      */
     public function signUp(SignupRequest $request): JsonResponse
     {
@@ -36,7 +99,67 @@ class AuthController extends BaseController
     /**
      * @param TokenRequest $request
      * @return JsonResponse
-     */
+     *
+     * /**
+     *  Login
+     * @OA\Post (
+     *      path="/auth/token",
+     *      tags={"Auth"},
+     *      @OA\RequestBody(
+     *          @OA\MediaType(
+     *              mediaType="application/json",
+     *              @OA\Schema(
+     *                  @OA\Property(
+     *                       type="object",
+     *                       @OA\Property(
+     *                           property="email",
+     *                           type="string"
+     *                       ),
+     *                       @OA\Property(
+     *                           property="password",
+     *                           type="string"
+     *                       )
+     *                  ),
+     *                  example={
+     *                      "email":"john@test.com",
+     *                      "password":"johnjohn1"
+     *                 }
+     *              )
+     *          )
+     *       ),
+     *       @OA\Response(
+     *           response=200,
+     *           description="Valid credentials",
+     *           @OA\JsonContent(
+     *               @OA\Property(property="code", type="number", example=200),
+     *               @OA\Property(property="payload", type="object",
+     *                 @OA\Property(property="token", type="string", example="1|randomtokenasfhajskfhajf398rureuuhfdshk"),
+     *               ),
+     *           )
+     *       ),
+     *       @OA\Response(
+     *           response=401,
+     *           description="Not found",
+     *           @OA\JsonContent(
+     *               @OA\Property(property="code", type="number", example=401),
+     *               @OA\Property(property="payload", type="object",
+     *                   @OA\Property(property="message", type="string", example="user not found"),
+     *               ),
+     *           )
+     *       ),
+     *       @OA\Response(
+     *            response=422,
+     *            description="Invalid credentials",
+     *            @OA\JsonContent(
+     *                @OA\Property(property="code", type="number", example=422),
+     *                @OA\Property(property="payload", type="object",
+     *                    @OA\Property(property="message", type="string", example="these credentials do not match our records"),
+     *                ),
+     *            )
+     *        ),
+     *  )
+     * /
+ */
     public function getToken(TokenRequest $request): JsonResponse
     {
         try {
@@ -49,6 +172,38 @@ class AuthController extends BaseController
 
     /**
      * @return JsonResponse
+     *  Logout
+     * @OA\Post (
+     *      path="/auth/logout",
+     *      tags={"Auth"},
+     *      @OA\RequestBody(
+     *          @OA\MediaType(
+     *              mediaType="application/json",
+     *              @OA\Schema(
+     *                  @OA\Property(
+     *                  ),
+     *              )
+     *          )
+     *       ),
+     *       @OA\Response(
+     *           response=200,
+     *           description="Success",
+     *           @OA\JsonContent(
+     *                @OA\Property(property="code", type="number", example=200),
+     *                @OA\Property(property="payload", type="bool", example="true")
+     *           )
+     *       ),
+     *       @OA\Response(
+     *           response=401,
+     *           description="Invalid token",
+     *           @OA\JsonContent(
+     *                @OA\Property(property="message", type="string", example="Unauthenticated."),
+     *           )
+     *       ),
+     *       security={
+     *          {"sanctum": {}}
+     *      }
+     *  )
      */
     public function logout(): JsonResponse
     {

@@ -12,7 +12,7 @@ trait ApiResponseTrait
     public function respond($payload, $status): JsonResponse
     {
         if(is_string($payload)) {
-            $payload = ['msg' => $payload];
+            $payload = ['message' => $payload];
         }
 
         return response()->json([
