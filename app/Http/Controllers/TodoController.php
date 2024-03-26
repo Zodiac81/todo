@@ -11,6 +11,7 @@ use App\Models\ToDo;
 use App\Services\PaginationService;
 use App\Services\TodoService;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
@@ -26,10 +27,10 @@ class TodoController extends BaseController
     /**
      * Display a listing of the resource.
      */
-    public function index(TodoRequest $request): array
+    public function index(TodoRequest $request): JsonResponse
     {
         return $this->respond(
-            PaginationService::paginate(new TodoCollection($this->todoService->getAll([], ['user_id' => Auth::id()])->sortByDesc('created_at')), $request->perPage),
+            PaginationService::paginate(new TodoCollection($this->todoService->getAll([], ['user_id' => Auth::id()])->sortByDesc('created_at')), $request->perPage ?? PaginationService::DEFAULT_PER_PAGE_VALUE),
             ResponseAlias::HTTP_OK
         );
     }
@@ -37,7 +38,7 @@ class TodoController extends BaseController
     /**
      * Store a newly created resource in storage.
      */
-    public function store(TodoRequest $request): array
+    public function store(TodoRequest $request): JsonResponse
     {
         try {
             $model = $this->todoService->store(new TodoDTO($request->validated()));
@@ -51,7 +52,7 @@ class TodoController extends BaseController
     /**
      * Update the specified resource in storage.
      */
-    public function update(TodoRequest $request, ToDo $todo): array
+    public function update(TodoRequest $request, ToDo $todo): JsonResponse
     {
         try{
             $model = $this->todoService->update(new ApiTodoDTO($todo->id, $request->title, $request->description));
@@ -66,7 +67,7 @@ class TodoController extends BaseController
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ToDo $todo): array
+    public function destroy(ToDo $todo): JsonResponse
     {
         try{
             return $this->respond($this->todoService->delete(new ApiTodoDTO($todo->id, $todo->title, $todo->description)), ResponseAlias::HTTP_NO_CONTENT);
