@@ -41,7 +41,7 @@ class BaseRepository implements RepositoryContract
      * @param array $where
      * @return mixed
      */
-    public function getWithWhereSingle(array $with, array $where): mixed
+    public function getWithWhereSingle(array $where = [], array $with = []): mixed
     {
         return $this->getModel()::with($with)->where($where)->first();
     }
@@ -51,7 +51,7 @@ class BaseRepository implements RepositoryContract
      * @param array $where
      * @return mixed
      */
-    public function getWithWhere(array $with, array $where): mixed
+    public function getWithWhere(array $where = [], array $with = []): mixed
     {
         return $this->getModel()::with($with)->where($where)->get();
     }

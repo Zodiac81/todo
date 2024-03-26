@@ -7,7 +7,6 @@ use App\DTO\TodoDTO;
 use App\Repositories\TodoRepository;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class TodoService
@@ -21,14 +20,15 @@ class TodoService
 
     /**
      * @param TodoDTO $dto
+     * @param int $userId
      * @return Model
      */
-    public function store(TodoDTO $dto): Model
+    public function store(TodoDTO $dto, int $userId): Model
     {
         $model = $this->repository->make([
             'title'         => $dto->title,
             'description'   => $dto->description,
-            'user_id'       => Auth::id()
+            'user_id'       => $userId
         ]);
 
         $model->save();
@@ -37,12 +37,13 @@ class TodoService
 
     /**
      * @param ApiTodoDTO $dto
+     * @param int $userId
      * @return mixed
      */
-    public function delete(ApiTodoDTO $dto): mixed
+    public function delete(ApiTodoDTO $dto, int $userId): mixed
     {
-        $model = $this->repository->getWithWhereSingle([], [
-            ['user_id', '=', Auth::id()],
+        $model = $this->repository->getWithWhereSingle([
+            ['user_id', '=', $userId],
             ['id', '=', $dto->id]
         ]);
 
@@ -55,12 +56,13 @@ class TodoService
 
     /**
      * @param ApiTodoDTO $dto
+     * @param int $userId
      * @return Model
      */
-    public function update(ApiTodoDTO $dto): Model
+    public function update(ApiTodoDTO $dto, int $userId): Model
     {
-        $model = $this->repository->getWithWhereSingle([], [
-            ['user_id', '=', Auth::id()],
+        $model = $this->repository->getWithWhereSingle([
+            ['user_id', '=', $userId],
             ['id', '=', $dto->id]
         ]);
 
@@ -81,9 +83,9 @@ class TodoService
      * @param array $where
      * @return mixed
      */
-    public function getAll(array $with, array $where): mixed
+    public function getAll(array $where = [], array $with = []): mixed
     {
-        return $this->repository->getWithWhere($with, $where);
+        return $this->repository->getWithWhere($where, $with);
     }
 
 }

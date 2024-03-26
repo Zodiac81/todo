@@ -52,6 +52,9 @@ class AuthController extends BaseController
      */
     public function logout(): JsonResponse
     {
-        return $this->respond(Auth::user()->currentAccessToken()->delete(), ResponseAlias::HTTP_OK);
+        return $this->respond(
+            Auth::user()->currentAccessToken()->delete(),
+            ResponseAlias::HTTP_OK
+        );
     }
 }

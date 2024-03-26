@@ -18,10 +18,15 @@ use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 class TodoController extends BaseController
 {
     /**
+     * @var int|string
+     */
+    protected int|string $userID;
+    /**
      * @param TodoService $todoService
      */
     public function __construct(protected TodoService $todoService)
     {
+        $this->userID = Auth::id();
     }
 
     /**
@@ -30,7 +35,9 @@ class TodoController extends BaseController
     public function index(TodoRequest $request): JsonResponse
     {
         return $this->respond(
-            PaginationService::paginate(new TodoCollection($this->todoService->getAll([], ['user_id' => Auth::id()])->sortByDesc('created_at')), $request->perPage ?? PaginationService::DEFAULT_PER_PAGE_VALUE),
+            PaginationService::paginate(
+                new TodoCollection($this->todoService->getAll(['user_id' => $this->userID])->sortByDesc('created_at')),
+                $request->perPage ?? PaginationService::DEFAULT_PER_PAGE_VALUE),
             ResponseAlias::HTTP_OK
         );
     }
@@ -41,12 +48,13 @@ class TodoController extends BaseController
     public function store(TodoRequest $request): JsonResponse
     {
         try {
-            $model = $this->todoService->store(new TodoDTO($request->validated()));
+            return $this->respond(
+                new TodoResource($this->todoService->store(new TodoDTO($request->validated()), $this->userID)),
+                ResponseAlias::HTTP_CREATED
+            );
         } catch (Exception $exception) {
             return $this->respond($exception->getMessage(), $exception->getCode());
         }
-
-        return $this->respond(new TodoResource($model), ResponseAlias::HTTP_CREATED);
     }
 
     /**
@@ -55,13 +63,13 @@ class TodoController extends BaseController
     public function update(TodoRequest $request, ToDo $todo): JsonResponse
     {
         try{
-            $model = $this->todoService->update(new ApiTodoDTO($todo->id, $request->title, $request->description));
+            return $this->respond(
+                new TodoResource($this->todoService->update(new ApiTodoDTO($todo->id, $request->title, $request->description), $this->userID)),
+                ResponseAlias::HTTP_ACCEPTED
+            );
         } catch (Exception $exception) {
             return $this->respond($exception->getMessage(), $exception->getCode());
         }
-
-        return $this->respond(new TodoResource($model), ResponseAlias::HTTP_ACCEPTED);
-
     }
 
     /**
@@ -70,7 +78,7 @@ class TodoController extends BaseController
     public function destroy(ToDo $todo): JsonResponse
     {
         try{
-            return $this->respond($this->todoService->delete(new ApiTodoDTO($todo->id, $todo->title, $todo->description)), ResponseAlias::HTTP_NO_CONTENT);
+            return $this->respond($this->todoService->delete(new ApiTodoDTO($todo->id, $todo->title, $todo->description), $this->userID), ResponseAlias::HTTP_NO_CONTENT);
         } catch (Exception $exception) {
             return $this->respond($exception->getMessage(), $exception->getCode());
         }

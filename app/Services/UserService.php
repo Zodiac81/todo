@@ -6,6 +6,7 @@ use App\DTO\AuthUserDTO;
 use App\DTO\UserDTO;
 use App\Repositories\UserRepository;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
@@ -41,7 +42,7 @@ class UserService
      */
     public function getToken(AuthUserDTO $dto): string
     {
-        $user = $this->repository->getWithWhereSingle([], [
+        $user = $this->repository->getWithWhereSingle([
             'email' => $dto->email
         ]);
 
