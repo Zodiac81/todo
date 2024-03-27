@@ -36,15 +36,15 @@ class TodoService
     }
 
     /**
-     * @param ApiTodoDTO $dto
+     * @param int $id
      * @param int $userId
      * @return mixed
      */
-    public function delete(ApiTodoDTO $dto, int $userId): mixed
+    public function delete(int $id, int $userId): mixed
     {
         $model = $this->repository->getWithWhereSingle([
             ['user_id', '=', $userId],
-            ['id', '=', $dto->id]
+            ['id', '=', $id]
         ]);
 
         if (!$model) {

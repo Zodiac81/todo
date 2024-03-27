@@ -24,6 +24,7 @@
                 "tags": [
                     "Auth"
                 ],
+                "summary": "SignUp",
                 "operationId": "8060ba7cb59324131da8151d9518ca60",
                 "requestBody": {
                     "content": {
@@ -36,7 +37,9 @@
                                                 "type": "string"
                                             },
                                             "email": {
-                                                "type": "string"
+                                                "type": "string",
+                                                "format": "email",
+                                                "pattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$"
                                             },
                                             "password": {
                                                 "type": "string"
@@ -132,6 +135,7 @@
                 "tags": [
                     "Auth"
                 ],
+                "summary": "Login",
                 "operationId": "ad2838c5c91854d8b02f8924415c2e1f",
                 "requestBody": {
                     "content": {
@@ -243,6 +247,7 @@
                 "tags": [
                     "Auth"
                 ],
+                "summary": "Logout",
                 "operationId": "0d29c740dc06d77602af8095bf4654cc",
                 "requestBody": {
                     "content": {
@@ -300,12 +305,498 @@
                     }
                 ]
             }
+        },
+        "/todos": {
+            "get": {
+                "tags": [
+                    "Todo"
+                ],
+                "summary": "Get auth user todos",
+                "description": "Index",
+                "operationId": "5510844e30a45dbdcd411af1d4e00991",
+                "parameters": [
+                    {
+                        "name": "perPage",
+                        "in": "query",
+                        "description": "Amount items per page",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        },
+                        "example": "3"
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Pagination page index",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "number",
+                                            "example": 200
+                                        },
+                                        "payload": {
+                                            "properties": {
+                                                "data": {
+                                                    "properties": {
+                                                        "todo": {
+                                                            "properties": {
+                                                                "id": {
+                                                                    "type": "number",
+                                                                    "example": 2
+                                                                },
+                                                                "title": {
+                                                                    "type": "string",
+                                                                    "example": "Title"
+                                                                },
+                                                                "description": {
+                                                                    "type": "string",
+                                                                    "example": "Some description"
+                                                                },
+                                                                "updated_at": {
+                                                                    "type": "string",
+                                                                    "example": "2024-01-30 06:06:17"
+                                                                },
+                                                                "created_at": {
+                                                                    "type": "string",
+                                                                    "example": "2024-01-30 06:06:17"
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Todo"
+                ],
+                "summary": "Store todo",
+                "description": "Store",
+                "operationId": "89cb70495ecb1d8391816b58da827409",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "title": "New todo title",
+                                    "description": "New todo description"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "number",
+                                            "example": 201
+                                        },
+                                        "payload": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "number",
+                                                    "example": 2
+                                                },
+                                                "title": {
+                                                    "type": "string",
+                                                    "example": "Title"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Some description"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "example": "2024-01-30 06:06:17"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "example": "2024-01-30 06:06:17"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation errors",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "The title field is required"
+                                            },
+                                            "example": [
+                                                {
+                                                    "message": "The title field is required"
+                                                },
+                                                {
+                                                    "message": "The title field must not be more than 255 characters"
+                                                },
+                                                {
+                                                    "message": "The title field must not be less than 3 characters"
+                                                }
+                                            ]
+                                        },
+                                        "description": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "The description field must not be more than 1000 characters"
+                                            },
+                                            "example": [
+                                                {
+                                                    "message": "The title field must not be more than 1000 characters"
+                                                },
+                                                {
+                                                    "message": "The title field must not be less than 3 characters"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/todos/{id}": {
+            "delete": {
+                "tags": [
+                    "Todo"
+                ],
+                "summary": "Delete todo",
+                "description": "Delete todo",
+                "operationId": "deleteTodo",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Todo id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        },
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Not found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "patch": {
+                "tags": [
+                    "Todo"
+                ],
+                "summary": "Edit todo",
+                "description": "Returns edited todo data",
+                "operationId": "editTodo",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Todo id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "title": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "title": "Updated todo title",
+                                    "description": "Updated todo description"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "202": {
+                        "description": "Accepted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "number",
+                                            "example": 202
+                                        },
+                                        "payload": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "number",
+                                                    "example": 1
+                                                },
+                                                "title": {
+                                                    "type": "string",
+                                                    "example": "Updated Title"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Updated description"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "example": "2024-01-30 06:06:17"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "example": "2024-01-30 06:06:17"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "The title field must be present in request body"
+                                            },
+                                            "example": [
+                                                {
+                                                    "message": "The title field must be present in request body"
+                                                },
+                                                {
+                                                    "message": "The title field must not be more than 255 characters"
+                                                },
+                                                {
+                                                    "message": "The title field must not be less than 3 characters"
+                                                }
+                                            ]
+                                        },
+                                        "description": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "The description field must not be more than 1000 characters"
+                                            },
+                                            "example": [
+                                                {
+                                                    "message": "The description field must be present in request body"
+                                                },
+                                                {
+                                                    "message": "The description field must not be more than 1000 characters"
+                                                },
+                                                {
+                                                    "message": "The description field must not be less than 3 characters"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Not found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
         }
     },
     "tags": [
         {
             "name": "Auth",
             "description": "API Endpoints for user auth"
+        },
+        {
+            "name": "Todo",
+            "description": "API Endpoints for todo`s"
         }
     ],
     "components": {

@@ -19,8 +19,7 @@ class AuthController extends BaseController
     }
 
     /**
-     * @param SignupRequest $request
-     * @return JsonResponse
+     * SignUp
      *
      * @OA\Post (
      *      path="/auth/sign-up",
@@ -37,7 +36,9 @@ class AuthController extends BaseController
      *                       ),
      *                       @OA\Property(
      *                           property="email",
-     *                           type="string"
+     *                           type="string",
+     *                           pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$",
+     *                           format="email"
      *                       ),
      *                       @OA\Property(
      *                           property="password",
@@ -83,7 +84,9 @@ class AuthController extends BaseController
      *           )
      *       )
      *  )
-     * /
+     *
+     * @param SignupRequest $request
+     * @return JsonResponse
      */
     public function signUp(SignupRequest $request): JsonResponse
     {
@@ -97,11 +100,8 @@ class AuthController extends BaseController
     }
 
     /**
-     * @param TokenRequest $request
-     * @return JsonResponse
+     * Login
      *
-     * /**
-     *  Login
      * @OA\Post (
      *      path="/auth/token",
      *      tags={"Auth"},
@@ -158,8 +158,10 @@ class AuthController extends BaseController
      *            )
      *        ),
      *  )
-     * /
- */
+     *
+     * @param TokenRequest $request
+     * @return JsonResponse
+     */
     public function getToken(TokenRequest $request): JsonResponse
     {
         try {
@@ -171,8 +173,8 @@ class AuthController extends BaseController
     }
 
     /**
-     * @return JsonResponse
-     *  Logout
+     * Logout
+     *
      * @OA\Post (
      *      path="/auth/logout",
      *      tags={"Auth"},
@@ -204,6 +206,8 @@ class AuthController extends BaseController
      *          {"sanctum": {}}
      *      }
      *  )
+     *
+     *  @return JsonResponse
      */
     public function logout(): JsonResponse
     {

@@ -1,27 +1,37 @@
-Test project "Todo" instructions by Aleksey Derevyanko
-To run app just follow this few steps:
+## Test project "API Todo" by Aleksey Derevyanko
 
-create .env or rename .env.example file and replace db connection section by these lines:
+### To run app just follow this few steps:
 
-DB_CONNECTION=mysql
-DB_HOST=mysql
-DB_PORT=3306
-DB_DATABASE=todo
-DB_USERNAME=root
-DB_PASSWORD=
+* Open console terminal in project root directory and run < make build > command. 
+  It will download and install uses images via docker-compose.
 
-in root directory run < make build > in command line. This will download and install images via docker-compose.
+* Replace db connection section in .env file:
 
-run docker containers with < make up >
-
-Enter to the app container  - run < make php-fpm >
-
-Run < composer install >
-
-Run php artisan key:generate
-
-Run migrations - php artisan migrate   Test database is ready
+    DB_CONNECTION=mysql
+    DB_HOST=mysql
+    DB_PORT=3306
+    DB_DATABASE=todo
+    DB_USERNAME=root
+    DB_PASSWORD=
 
 
-Well done)
+* Run docker containers with < make up > command.
 
+* Run unit tests with < make test > command.
+
+### USE API VIA SWAGGER*
+
+Open browser and type http://localhost:8080/api/docs
+Use SignUp route to get your personal token. Copy token and paste it in login modal window. 
+Don`t forget to type **Bearer** before token. And now you are free to test TODO API.
+
+### USE API VIA POSTMAN
+
+* POST        http://localhost:8080/api/auth/logout
+* POST        http://localhost:8080/api/auth/sign-up
+* POST        http://localhost:8080/api/auth/token
+
+* GET         http://localhost:8080/api/todos
+* POST        http://localhost:8080/api/todos
+* PATCH       http://localhost:8080/api/todos/{todo}
+* DELETE      http://localhost:8080/api/todos/{todo} .

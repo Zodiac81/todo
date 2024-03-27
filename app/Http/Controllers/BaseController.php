@@ -27,6 +27,12 @@ use App\Traits\ApiResponseTrait;
  *     name="Auth",
  *     description="API Endpoints for user auth"
  * )
+ *
+ * @OA\Tag(
+ *     name="Todo",
+ *     description="API Endpoints for todo`s"
+ * )
+ *
  */
 class BaseController extends Controller
 {

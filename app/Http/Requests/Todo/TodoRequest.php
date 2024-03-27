@@ -30,22 +30,22 @@ class TodoRequest extends FormRequest
 
             case 'GET':
                 $this->rules = [
-                    'perPage' => 'integer|min:1',
-                    'page'    => 'integer|min:1'
+                    'perPage' => 'integer',
+                    'page'    => 'integer'
                 ];
                 break;
 
             case 'POST':
                 $this->rules = [
-                    'title'       => 'required|string|max:255',
-                    'description' => 'string|max:1000'
+                    'title'       => 'required|string|min:3|max:255',
+                    'description' => 'string|min:3|max:1000'
                 ];
                 break;
 
             case 'PATCH':
                 $this->rules = [
-                    'title'       => 'string|max:255',
-                    'description' => 'string|max:1000'
+                    'title'       => 'present|string|min:3|max:255',
+                    'description' => 'present|string|min:3|max:1000'
                 ];
                 break;
 
@@ -63,14 +63,16 @@ class TodoRequest extends FormRequest
     {
         return [
             'title.required'     => 'The title field is required',
+            'title.present'      => 'The title field must be present in request body',
             'title.max'          => 'The title field must not be more than 255 characters',
+            'title.min'          => 'The title field must not be less than 3 characters',
             'title.string'       => 'The title field must be a string',
             'description.string' => 'The description field must be a string',
             'description.max'    => 'The description field must not be more than 1000 characters',
+            'description.min'    => 'The description field must not be less than 3 characters',
+            'description.present' => 'The description field must be present in request body',
             'perPage.integer'    => 'The perPage field must be an integer',
-            'perPage.min'        => 'The perPage field can`t be min than 1',
             'page.integer'       => 'The page field must be an integer',
-            'page.min'           => 'The page field can`t be min than 1'
         ];
     }
 }
