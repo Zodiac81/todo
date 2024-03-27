@@ -5,7 +5,9 @@ build:
 up:
 	docker-compose up -d
 	docker-compose run --rm php-fpm composer install
+	docker-compose run --rm php php artisan key:generate
 	docker-compose run --rm php-fpm php artisan migrate
+	docker-compose run --rm php-fpm php artisan test
 down:
 	docker-compose down
 php-fpm:
