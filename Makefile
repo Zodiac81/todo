@@ -14,3 +14,6 @@ php-fpm:
 	docker-compose exec php-fpm bash
 test:
 	docker-compose run --rm php-fpm php artisan test
+rlist:
+	docker-compose run --rm php-fpm php artisan route:list
+
