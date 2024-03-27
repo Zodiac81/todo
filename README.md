@@ -14,13 +14,13 @@
     DB_USERNAME=root
     DB_PASSWORD=
 
-
-* Run docker containers with < make up > command.
+* Run docker containers with < make up > command. Also will be install all composer dependencies and run laravel migrations
 
 * Run unit tests with < make test > command.
 
 ### USE API VIA SWAGGER*
 
+Add to .env value L5_SWAGGER_CONST_HOST=http://127.0.0.1:8000/api
 Open browser and type http://localhost:8080/api/docs
 Use SignUp route to get your personal token. Copy token and paste it in login modal window. 
 Don`t forget to type **Bearer** before token. And now you are free to test TODO API.

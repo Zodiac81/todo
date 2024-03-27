@@ -1,10 +1,11 @@
 build:
 	if ! [ -f .env ];then cp .env.example .env;fi
 	docker-compose build
-	docker-compose run --rm php-fpm php composer install
-	docker-compose run --rm php-fpm php artisan migrate
+
 up:
 	docker-compose up -d
+	docker-compose run --rm php-fpm php composer install
+	docker-compose run --rm php-fpm php artisan migrate
 down:
 	docker-compose down
 php-fpm:
